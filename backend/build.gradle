@@ -28,6 +28,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation("io.github.cdimascio:dotenv-java:3.2.0") // Dependency to recognize .env variables
 	compileOnly 'org.projectlombok:lombok'
 	// developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
@@ -37,7 +39,18 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+// Injecting environment variables
+def envFile = ".env.dev"
+def envProps = new Properties()
+
+file(envFile).withReader { envProps.load(it) }
+tasks.withType(JavaExec).configureEach {
+	environment envProps
+}
+tasks.test {
+	environment envProps
 }
