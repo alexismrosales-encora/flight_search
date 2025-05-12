@@ -3,8 +3,10 @@ package com.flightsearch.backend.client;
 import com.flightsearch.backend.auth.AmadeusTokenService;
 import com.flightsearch.backend.config.AmadeusProperties;
 import com.flightsearch.backend.dto.amadeus.AmadeusOfferDTO;
+import com.flightsearch.backend.dto.response.FlightSearchResponseDTO;
 import com.flightsearch.backend.entity.request.FlightSearchRequest;
 import com.flightsearch.backend.exceptions.ApiResponseException;
+import com.flightsearch.backend.mapper.response.FlightSearchResponseMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -23,7 +25,7 @@ public class AmadeusClient {
         private final AmadeusTokenService amadeusTokenService;
         private final AmadeusProperties amadeusProperties;
 
-        public Mono<List<AmadeusOfferDTO.AmadeusOfferResponseSimplified>> search(FlightSearchRequest req) {
+        public Mono<List<FlightSearchResponseDTO>> search(FlightSearchRequest req) {
             UriComponentsBuilder uri = UriComponentsBuilder
                     .fromUriString(amadeusProperties.getHost())
                     .path("/v2/shopping/flight-offers")
@@ -38,22 +40,9 @@ public class AmadeusClient {
 
             // using non-blocking api request to amadeus
             return makeGetRequest(
-                    uri,
-                    AmadeusOfferDTO.AmadeusOfferResponse.class)
-                    .flatMapIterable(res -> res.data)
-                    .map(offer -> {
-                        var seg = offer.itineraries.get(0).segments.get(0);
-                        return new AmadeusOfferDTO.AmadeusOfferResponseSimplified(
-                                offer.id,
-                                offer.source,
-                                seg.carrierCode,
-                                seg.flightNumber,
-                                seg.departure.at,
-                                seg.arrival.at,
-                                Double.parseDouble(offer.price.total),
-                                offer.price.currency
-                        );
-                    })
+                    uri, AmadeusOfferDTO.AmadeusOfferResponse.class)
+                        .flatMapIterable(res -> res.data)
+                    .map(FlightSearchResponseMapper::mapToFlightResponse)
                     .collectList();
         }
 

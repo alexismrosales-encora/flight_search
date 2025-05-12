@@ -22,19 +22,13 @@ public class SearchFlightsService {
     private final AmadeusClient amadeusClient;
     public Mono<List<FlightSearchResponseDTO>> getFlights(FlightSearchRequestDTO flightSearchRequestDTO) {
         FlightSearchRequest flightSearchRequest = mapToFlightRequest(flightSearchRequestDTO);
-        Mono<List<AmadeusOfferDTO.AmadeusOfferResponseSimplified>> amadeusResponse = amadeusClient.search(flightSearchRequest);
-
-        return amadeusResponse.flatMap(amadeusOffers -> {
-            // Handling exception in case there are not flights found
-            if(amadeusOffers.isEmpty()) {
-                return Mono.error(new SearchFlightException.NoFlightsFoundException("No flights found"));
-            }
-            // Converting the amadeusResponse into the internal FlightSearchResponseDTO
-            List<FlightSearchResponseDTO> flightSearchResponseDTOS = amadeusOffers
-                    .stream()
-                    .map(FlightSearchResponseMapper::mapToFlightResponse)
-                    .collect(Collectors.toList());
-            return Mono.just(flightSearchResponseDTOS);
-        });
+        return amadeusClient
+                .search(flightSearchRequest)
+                .flatMap(list -> {
+                    if(list.isEmpty()) {
+                        return Mono.error(new SearchFlightException("No flights found"));
+                    }
+                    return Mono.just(list);
+                });
     }
 }
