@@ -1,0 +1,27 @@
+package com.flightsearch.backend.mapper.requests;
+
+import com.flightsearch.backend.dto.request.LocationSearchRequestDTO;
+import com.flightsearch.backend.entity.request.LocationSearchRequest;
+
+/**
+*
+* LocationSearchMapper provides utility methods for converting between
+*
+*/
+public class LocationSearchRequestMapper {
+    public LocationSearchRequest mapToSearchLocation(LocationSearchRequestDTO locationSearchRequestDTO) {
+        return new LocationSearchRequest(
+                locationSearchRequestDTO.getKeyword(),
+                locationSearchRequestDTO.getPageLimit(),
+                locationSearchRequestDTO.getPageOffset()
+        );
+    }
+
+    public LocationSearchRequestDTO mapToSearchLocationDTO(LocationSearchRequest locationSearchRequest) {
+        return new LocationSearchRequestDTO(
+                locationSearchRequest.getKeyword(),
+                locationSearchRequest.getPageLimit(),
+                locationSearchRequest.getPageOffset()
+        );
+    }
+}
