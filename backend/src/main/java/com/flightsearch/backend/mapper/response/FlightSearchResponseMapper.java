@@ -5,7 +5,7 @@ import com.flightsearch.backend.dto.response.FlightSearchResponseDTO;
 
 public class FlightSearchResponseMapper {
     public static FlightSearchResponseDTO mapToFlightResponse(AmadeusOfferDTO.AmadeusOffer offer) {
-        var segment = offer.itineraries.get(0).segments.get(0);
+        var segment = offer.itineraries.getFirst().segments.getFirst();
         return new FlightSearchResponseDTO(
                 offer.id,
                 offer.source,

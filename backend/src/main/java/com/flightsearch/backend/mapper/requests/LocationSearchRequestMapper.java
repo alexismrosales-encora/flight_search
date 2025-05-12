@@ -9,7 +9,7 @@ import com.flightsearch.backend.entity.request.LocationSearchRequest;
 *
 */
 public class LocationSearchRequestMapper {
-    public LocationSearchRequest mapToSearchLocation(LocationSearchRequestDTO locationSearchRequestDTO) {
+    public static LocationSearchRequest mapToSearchLocationRequest(LocationSearchRequestDTO locationSearchRequestDTO) {
         return new LocationSearchRequest(
                 locationSearchRequestDTO.getKeyword(),
                 locationSearchRequestDTO.getPageLimit(),
@@ -17,7 +17,7 @@ public class LocationSearchRequestMapper {
         );
     }
 
-    public LocationSearchRequestDTO mapToSearchLocationDTO(LocationSearchRequest locationSearchRequest) {
+    public static LocationSearchRequestDTO mapToSearchLocationRequestDTO(LocationSearchRequest locationSearchRequest) {
         return new LocationSearchRequestDTO(
                 locationSearchRequest.getKeyword(),
                 locationSearchRequest.getPageLimit(),
