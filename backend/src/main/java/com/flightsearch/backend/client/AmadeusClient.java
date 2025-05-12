@@ -58,6 +58,7 @@ public class AmadeusClient {
                     .path("/v1/reference-data/locations")
                     .queryParam("subType", "AIRPORT") // Setting airport locations type
                     .queryParam("keyword", req.getKeyword())
+                    // TODO: Check how to use correctly these parameters and implemented for pagination
                     //.queryParam("page[limit]", req.getPageLimit())
                     //.queryParam("page[offset]", req.getPageOffset())
                     .queryParam("sort", "analytics.travelers.score") // Setting sort by analytics
