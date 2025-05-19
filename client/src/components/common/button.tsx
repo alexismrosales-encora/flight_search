@@ -1,13 +1,13 @@
 import { Button as ButtonMui, ButtonProps } from "@mui/material"
-import { styled, useTheme } from "@mui/material/styles"
+import { styled } from "@mui/material/styles"
 import { ReactNode } from "react";
 
 type CustomProps = {
-  children: ReactNode
+  children?: ReactNode
 } & ButtonProps
 
 const StyledButton = styled(ButtonMui)(({ theme }) => ({
-
+  background: "white",
   borderRadius: theme.shape.borderRadius,
   padding: "10px 20px",
   fontWeight: "600",
@@ -22,7 +22,9 @@ const StyledButton = styled(ButtonMui)(({ theme }) => ({
 }));
 
 const Button = ({ children, ...muiProps }: CustomProps) => {
-  return <StyledButton {...muiProps}>{children}</StyledButton>
+  return <div>
+    <StyledButton {...muiProps}>{children}</StyledButton>
+  </div>
 }
 
 export default Button
