@@ -72,3 +72,6 @@ export type FlightSearchResponse = {
   itineraries: Itinerary[]
   travelerPricings: TravelerPricingInfo[] | null
 }
+
+
+

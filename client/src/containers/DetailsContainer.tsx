@@ -23,42 +23,27 @@ import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports'
 import PaymentsIcon from '@mui/icons-material/Payments'
 import LocalOfferIcon from '@mui/icons-material/LocalOffer'
 
-import { FlightSearchContext, } from '../context/FlightSearchContext' // Adjust path
+import { FlightSearchContext, } from '../context/FlightSearchContext'
 import { FlightSearchContextType } from '../types/FlightSearchContextTypes'
 import {
-  FlightSearchResponse,
-  Itinerary,
   FlightLeg,
   TravelerPricingInfo,
-  FareDetailPerSegment,
   AmenityInfo,
   PriceSummary,
-  FeeInfo,
-} from '../types/FlightSearchResponseTypes' // Adjust path
-import { searchCityName } from '../services/FlightsService' // Adjust path
+} from '../types/FlightSearchResponseTypes'
+import { searchCityName } from '../services/FlightsService'
 import { CitySearchResponse } from '../types/FlightSearchTypes'
-
-// Utility to format date and time (can be moved to a utils file)
-const formatDateTime = (iso?: string | null, includeDate = true) => {
-  if (!iso) return 'N/A'
-  const d = new Date(iso)
-  const time = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  if (!includeDate) return time
-  const date = d.toLocaleDateString([], {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-  })
-  return `${time}, ${date}`
-}
+import { capitalizeWords } from '../utils/capitalizeWords'
+import { formatDateTime } from '../utils/formatDateTime'
 
 const DetailsContainer: React.FC = () => {
-  const context = useContext(FlightSearchContext) as FlightSearchContextType // Assuming context is always provided
+  const context = useContext(FlightSearchContext) as FlightSearchContextType
   const navigate = useNavigate()
 
   const [cityMap, setCityMap] = useState<Map<string, string>>(new Map())
   const [loadingCities, setLoadingCities] = useState<boolean>(false)
 
+  // Showing message in case there is no context
   if (!context || !context.detailsInfo) {
     return (
       <Container sx={{ py: 3 }}>
@@ -74,20 +59,16 @@ const DetailsContainer: React.FC = () => {
     (iataCode?: string | null): string => {
       if (!iataCode) return 'N/A'
 
-      // 1. Check if the city name is already in the local map
       if (cityMap.has(iataCode)) {
         return cityMap.get(iataCode) || iataCode // Return found name or fallback to code
       }
 
-      // 2. If not in the map, initiate an API call (fire-and-forget for this sync function's return)
-      // The component will re-render once setCityMap updates the state.
-      // Check if we are already fetching this code to prevent multiple calls (optional, simple version here)
-      // For a more robust solution, you might want to track pending requests for specific IATA codes.
+      // In case the city name is not in the map, just create another API call
       searchCityName(iataCode)
-        .then((data: CitySearchResponse) => { // Explicitly type data
+        .then((data: CitySearchResponse) => {
           const nameToStore = data && data.cityName ? data.cityName : iataCode
           setCityMap(prevMap => {
-            if (prevMap.get(iataCode) === nameToStore) return prevMap // Avoid unnecessary update if value is already same
+            if (prevMap.get(iataCode) === nameToStore) return prevMap
             const newMap = new Map(prevMap)
             newMap.set(iataCode, nameToStore)
             return newMap
@@ -95,35 +76,28 @@ const DetailsContainer: React.FC = () => {
         })
         .catch(err => {
           console.error(`On-demand getCityName: Failed to fetch city for ${iataCode}:`, err)
-          // On error, store the IATA code itself as a fallback to prevent repeated failed API calls
-          // from this on-demand fetch for this specific iataCode.
           setCityMap(prevMap => {
-            // Avoid overwriting if another process (like useEffect) already handled it or set a name
-            // or if it's already set to the iataCode (meaning a previous fetch for it failed)
             if (prevMap.has(iataCode)) {
               return prevMap;
             }
             const newMap = new Map(prevMap)
-            newMap.set(iataCode, iataCode) // Store IATA code as fallback
+            newMap.set(iataCode, iataCode)
             return newMap
           })
         })
 
-      // 3. Return the IATA code as an immediate fallback.
-      // The UI will initially show this, then update when the API call completes and cityMap changes.
+      // Just display iata code for fallback
       return iataCode
     },
-    [cityMap, setCityMap] // setCityMap is now a dependency
+    [cityMap, setCityMap]
   )
 
   useEffect(() => {
     if (flight) {
       const fetchAllCityNames = async () => {
         setLoadingCities(true)
-        // Start with a fresh map based on current cityMap to preserve on-demand fetches
-        // or completely fresh if you want useEffect to be the sole populator initially.
-        // For this version, let's allow useEffect to overwrite/confirm on-demand fetches.
-        const newCityMapForEffect = new Map<string, string>() // Build this map from scratch based on current flight
+        // Creating a new map for fresh data fetches
+        const newCityMapForEffect = new Map<string, string>()
         const codesToFetch = new Set<string>()
 
         flight.itineraries?.forEach(itinerary => {
@@ -137,10 +111,7 @@ const DetailsContainer: React.FC = () => {
           })
         })
 
-        // Filter out codes already present in the main cityMap, unless we want to re-verify them.
-        // For simplicity here, we'll attempt to fetch all unique codes from the current flight.
-        // The getCityName on-demand fetch will also fill the map.
-
+        // Filtering out codes already in the main Map, and fetching data in case there is not the flight
         if (codesToFetch.size > 0) {
           try {
             const promises = Array.from(codesToFetch).map(code =>
@@ -154,8 +125,7 @@ const DetailsContainer: React.FC = () => {
             const results = await Promise.all(promises)
             results.forEach(result => newCityMapForEffect.set(result.code, result.name))
 
-            // Merge with existing cityMap, giving preference to newly fetched data by useEffect
-            // or simply set the new map if useEffect is meant to be authoritative for the current flight.
+            // Merge with existing cityMap
             setCityMap(prevMap => new Map([...Array.from(prevMap.entries()), ...Array.from(newCityMapForEffect.entries())]));
 
           } catch (error) {
@@ -166,7 +136,7 @@ const DetailsContainer: React.FC = () => {
       }
       fetchAllCityNames()
     }
-  }, [flight, setCityMap]) // Added setCityMap to dependency array of useEffect
+  }, [flight, setCityMap])
 
   if (loadingFlight || (flight && loadingCities)) {
     return (
@@ -209,15 +179,13 @@ const DetailsContainer: React.FC = () => {
     )
   }
 
-  // --- Render Flight Details ---
   const renderAmenity = (amenity: AmenityInfo, index: number) => (
-    <Chip
+    amenity && amenity.description && <Chip
       key={index}
-      label={`${amenity.name}${amenity.isChargeable ? ' (Chargeable)' : ' (Free)'}`}
+      label={`${capitalizeWords(amenity.description)}${amenity.isChargeable ? ' (Chargeable)' : ' (Free)'}`}
       size="small"
       variant="outlined"
-      sx={{ mr: 0.5, mb: 0.5 }}
-    />
+      sx={{ mr: 0.5, mb: 0.5 }} />
   )
 
   const renderFareDetails = (segmentId: string) => {
@@ -238,11 +206,14 @@ const DetailsContainer: React.FC = () => {
               Bags: {fareDetailForSegment.includedCheckedBagsDescription || 'N/A'}
             </Typography>
             {fareDetailForSegment.amenities && fareDetailForSegment.amenities.length > 0 && (
-              <Box mt={0.5}>
-                <Typography variant="caption" display="block">Amenities:</Typography>
-                <Stack direction="row" spacing={0.5} flexWrap="wrap" mt={0.5}>
-                  {fareDetailForSegment.amenities.map(renderAmenity)}
-                </Stack>
+              <Box
+                display="flex"
+                flexDirection="row"
+                flexWrap="wrap"
+                alignItems="flex-start"
+                gap={0.5}
+              >
+                {fareDetailForSegment.amenities.map(renderAmenity)}
               </Box>
             )}
           </Box>

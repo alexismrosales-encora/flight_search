@@ -9,8 +9,13 @@ export type FlightSearchRequest = {
   currencyCode: string
   max: number
   nonStop: boolean
+  sortOptions: SortOptions
 }
 
+export enum SortOptions {
+  sortByTime,
+  sortByPrice
+}
 
 export type LocationSearchRequest = {
   keyword: string,
