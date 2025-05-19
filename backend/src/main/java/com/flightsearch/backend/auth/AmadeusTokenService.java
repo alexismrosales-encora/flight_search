@@ -21,6 +21,7 @@ public class AmadeusTokenService {
     private final AmadeusProperties amadeusProperties;
     private final AtomicReference<Token> cache = new AtomicReference<>();
 
+    // getBearerToken: if token is expired or is not already created, a new token is generated
     public String getBearerToken() {
         Token token = cache.get();
         // When token is expired or invalid

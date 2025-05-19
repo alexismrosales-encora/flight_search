@@ -1,5 +1,6 @@
 package com.flightsearch.backend.dto.request;
 
+import com.flightsearch.backend.enums.SortOptions;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,6 @@ import java.util.Currency;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 public class FlightSearchRequestDTO {
     String originLocationCode;
@@ -24,4 +24,6 @@ public class FlightSearchRequestDTO {
     Integer infants;
     Currency currencyCode;
     Integer max;
+    Boolean nonStop;
+    SortOptions sortOptions;
 }

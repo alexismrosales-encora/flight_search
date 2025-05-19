@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
+// AmadeusAirportCodeDTO works to transfer the received request and structure information
 public class AmadeusAirportCodesDTO {
     public static class AmadeusAirportCodesResponse {
         @JsonProperty("meta")

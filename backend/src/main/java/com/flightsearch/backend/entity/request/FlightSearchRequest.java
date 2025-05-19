@@ -1,5 +1,6 @@
 package com.flightsearch.backend.entity.request;
 
+import com.flightsearch.backend.enums.SortOptions;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,4 +25,6 @@ public class FlightSearchRequest {
     Integer infants;
     Currency currencyCode;
     Integer max;
+    Boolean nonStop;
+    SortOptions sortOptions;
 }

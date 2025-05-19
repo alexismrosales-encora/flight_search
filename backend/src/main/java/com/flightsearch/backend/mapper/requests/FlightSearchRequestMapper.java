@@ -19,7 +19,9 @@ public class FlightSearchRequestMapper {
                 flightSearchRequestDTO.getChildren(),
                 flightSearchRequestDTO.getInfants(),
                 flightSearchRequestDTO.getCurrencyCode(),
-                flightSearchRequestDTO.getMax()
+                flightSearchRequestDTO.getMax(),
+                flightSearchRequestDTO.getNonStop(),
+                flightSearchRequestDTO.getSortOptions()
         );
     }
 
@@ -33,7 +35,9 @@ public class FlightSearchRequestMapper {
                 flightSearchRequest.getChildren(),
                 flightSearchRequest.getInfants(),
                 flightSearchRequest.getCurrencyCode(),
-                flightSearchRequest.getMax()
+                flightSearchRequest.getMax(),
+                flightSearchRequest.getNonStop(),
+                flightSearchRequest.getSortOptions()
         );
     }
 }

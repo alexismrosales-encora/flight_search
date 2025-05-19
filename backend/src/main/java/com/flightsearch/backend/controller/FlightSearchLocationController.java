@@ -1,7 +1,11 @@
 package com.flightsearch.backend.controller;
 
+import com.flightsearch.backend.dto.request.AirportSearchByCodeRequestDTO;
+import com.flightsearch.backend.dto.request.CitySearchByCodeRequestDTO;
 import com.flightsearch.backend.dto.request.FlightSearchRequestDTO;
 import com.flightsearch.backend.dto.request.LocationSearchRequestDTO;
+import com.flightsearch.backend.dto.response.AirportSearchByCodeResponseDTO;
+import com.flightsearch.backend.dto.response.CitySearchByCodeResponseDTO;
 import com.flightsearch.backend.dto.response.FlightSearchResponseDTO;
 import com.flightsearch.backend.dto.response.LocationSearchResponseDTO;
 import com.flightsearch.backend.service.SearchFlightService;
@@ -22,7 +26,9 @@ import java.util.List;
 public class FlightSearchLocationController {
     private SearchFlightService searchFlightService;
 
-    @GetMapping
+    @PostMapping
+    // searchFlights: exposes the endpoint to receive in POST HTTP method the body of the FlightSearchRequestDTO to handle a response
+    // with the flights offer information
     public Mono<ResponseEntity<List<FlightSearchResponseDTO>>> searchFlights(@RequestBody FlightSearchRequestDTO flightSearchRequestDTO) {
         Mono<List<FlightSearchResponseDTO>> flightSearchResponseDTO = searchFlightService.getFlights(flightSearchRequestDTO);
         return flightSearchResponseDTO
@@ -30,10 +36,36 @@ public class FlightSearchLocationController {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public Mono<ResponseEntity<LocationSearchResponseDTO>> searchLocations(@RequestBody LocationSearchRequestDTO locationSearchRequestDTO) {
+    @GetMapping
+    // searchLocations: exposes the endpoint to receive GET HTTP method to response with the name of the locations based on
+    // the keyword
+    public Mono<ResponseEntity<LocationSearchResponseDTO>> searchLocations(
+            @RequestParam String keyword,
+            @RequestParam(required = false, defaultValue = "10") Integer limit,
+            @RequestParam(required = false, defaultValue = "0") Integer offset
+    ) {
+        LocationSearchRequestDTO locationSearchRequestDTO = new LocationSearchRequestDTO(keyword, limit, offset);
         Mono<LocationSearchResponseDTO> locationSearchResponseDTO = searchFlightService.getLocations(locationSearchRequestDTO);
         return locationSearchResponseDTO
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/city/{iataCityCode}")
+    // searchCityByCode: gives a response for the name of the city if the iata code exists
+    public Mono<ResponseEntity<CitySearchByCodeResponseDTO>> searchCityByCode(@PathVariable String iataCityCode) {
+        CitySearchByCodeRequestDTO citySearchByCodeRequestDTO = new CitySearchByCodeRequestDTO(iataCityCode);
+        Mono<CitySearchByCodeResponseDTO> citySearchByCodeResponseDTO = searchFlightService.getCityByCode(citySearchByCodeRequestDTO);
+        return citySearchByCodeResponseDTO
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("airport/{iataAirportCode}")
+    public Mono<ResponseEntity<AirportSearchByCodeResponseDTO>> searchAirportByCode(@PathVariable String iataAirportCode) {
+        AirportSearchByCodeRequestDTO airportSearchByCodeRequestDTO = new AirportSearchByCodeRequestDTO(iataAirportCode);
+        Mono<AirportSearchByCodeResponseDTO> airportSearchByCodeResponseDTOMono = searchFlightService.getAirportByCode(airportSearchByCodeRequestDTO);
+        return airportSearchByCodeResponseDTOMono
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
