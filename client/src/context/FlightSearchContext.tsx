@@ -14,6 +14,7 @@ export const FlighSearchProvider = ({ children }: { children: ReactNode }) => {
   const [loadingFlight, setLoadingFlight] = useState<boolean>(false)
   const [errorFlight, setErrorFlight] = useState<string | null>(null)
   const [cityMap, setCityMap] = useState(new Map())
+  const [searchAttemped, setSearchAttemped] = useState(false)
 
   const searchResultsState: SearchResultsStateType = {
     searchResults: searchResults,
@@ -21,7 +22,9 @@ export const FlighSearchProvider = ({ children }: { children: ReactNode }) => {
     loading: loading,
     setLoading: setLoading,
     error: error,
-    setError: setError
+    setError: setError,
+    searchAttemped: searchAttemped,
+    setSearchAttemped: setSearchAttemped
   }
 
   const detailsInfo: DetailsInfoType = {
