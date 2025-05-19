@@ -48,6 +48,7 @@ const PassengersSelect: FC<PassengersSelectProps> = ({ value, onChange }) => {
 
         <Box display="flex" alignItems="center" gap={1}>
           <IconButton
+            aria-label={`remove ${key}`}
             size="small"
             onClick={() => handleChange(key as keyof PassengerMap, -1)}
             disabled={value[key as keyof PassengerMap] === 0}
@@ -59,6 +60,7 @@ const PassengersSelect: FC<PassengersSelectProps> = ({ value, onChange }) => {
           <Typography>{value[key as keyof PassengerMap]}</Typography>
 
           <IconButton
+            aria-label={`add ${key}`}
             size="small"
             onClick={() => handleChange(key as keyof PassengerMap, 1)}
             sx={{ backgroundColor: "#005c1e", color: "white" }}
