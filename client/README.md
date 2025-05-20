@@ -1,54 +1,44 @@
-# React + TypeScript + Vite
+# Frontend - Flight Search Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
+This frontend application is built using **React** and **TypeScript**, powered by **Vite**. It provides an intuitive interface for searching flights offers through the Amadeus Test API, allowing the user to search different types of flights with different parameters and also see details about them. 
 
-Currently, two official plugins are available:
+## Technologies
+- **React**
+- **TypeScript**
+- **Vite**
+- **Vitest** for testing
+- **Axios**, **Material UI**, etc.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Setup Instructions
+1. Ensure **Node.js** (v22 or later) and **npm** are installed.
+2. Clone the repository to your local machine.
+3. Navigate to the frontend project directory.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Running the Application
+To start the application in development mode, run:
+```bash
+npm run start
 ```
+This command starts Vite and serves the application on the default port 5173.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+## Running Tests
+To run all tests using Vitest, execute:
+```bash
+npm run test
 ```
+This command runs all unit and integration tests and displays the results in the console.
+
+## Building for Production
+To build the application for production, run:
+```bash
+npm run build
+```
+This command compiles the TypeScript code and builds the optimized application using Vite.
+
+## Developer Notes
+- The project follows a component-based architecture.
+- API calls are made using Axios to the backend app.
+- Maintain consistent code style and follow best practices.
+- Tests are written using Vitest.
+- App will run in port 5173.
