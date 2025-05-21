@@ -4,7 +4,7 @@ import { primaryColors, secondaryColors } from "./colors"
 const CustomTheme = createTheme({
   palette: {
     primary: {
-      main: primaryColors[500],
+      main: primaryColors[600],
       light: primaryColors[200],
       dark: primaryColors[800]
     },
@@ -13,6 +13,9 @@ const CustomTheme = createTheme({
       light: primaryColors[200],
       dark: primaryColors[800]
     },
+    text: {
+      secondary: primaryColors[700]
+    }
   },
   shape: {
     borderRadius: 12,
@@ -24,6 +27,6 @@ const CustomTheme = createTheme({
     primary: primaryColors,
     secondary: secondaryColors,
   },
-});
+})
 
 export default CustomTheme

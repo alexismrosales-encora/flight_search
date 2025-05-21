@@ -86,16 +86,16 @@ const FlightDetailsCard: React.FC<Props> = ({
               <Typography variant="body2" fontWeight="medium">
                 {depCityName} ({leg.departureAirportCode})
               </Typography>
-              {leg.departureAirportTerminal && (
+              {leg.departureAirportTerminal && <>
                 <Typography
                   variant="caption"
                   display="block"
-                  color="textSecondary"
+                  color="textPrimary"
                 >
                   Terminal: {leg.departureAirportTerminal}
                 </Typography>
-              )}
-              <Typography variant="caption" color="textSecondary">
+              </>}
+              <Typography variant="caption" color="textPrimary">
                 {depTime} – {depDate}
               </Typography>
             </Box>
@@ -117,12 +117,12 @@ const FlightDetailsCard: React.FC<Props> = ({
                 <Typography
                   variant="caption"
                   display="block"
-                  color="textSecondary"
+                  color="textPrimary"
                 >
                   Terminal: {leg.arrivalAirportTerminal}
                 </Typography>
               )}
-              <Typography variant="caption" color="textSecondary">
+              <Typography variant="caption" color="textPrimary">
                 {arrTime} – {arrDate}
               </Typography>
             </Box>
