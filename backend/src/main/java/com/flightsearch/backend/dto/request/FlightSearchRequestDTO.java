@@ -12,6 +12,7 @@ import java.util.Currency;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class FlightSearchRequestDTO {
     String originLocationCode;
     String destinationLocationCode;
