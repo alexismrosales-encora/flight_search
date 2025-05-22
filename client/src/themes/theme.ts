@@ -14,7 +14,7 @@ const CustomTheme = createTheme({
       dark: primaryColors[800]
     },
     text: {
-      secondary: primaryColors[700]
+      secondary: secondaryColors[800]
     }
   },
   shape: {
